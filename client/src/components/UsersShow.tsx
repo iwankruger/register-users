@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { StoreState } from '../reducers';
 import { UsersInterface, fetchUsers } from '../actions';
@@ -16,11 +17,28 @@ class UsersShow extends React.Component<AppProps> {
         this.props.fetchUsers();
     }
 
-    renderUsers() {
+    deleteUser(id: number): void {
+
+    }
+
+
+    renderUsers(): JSX.Element[] {
         return _.map(this.props.users, users => {
           return (
-            <li key={users.id}>
-              {users.name}
+            <li className="list-group-item" key={users.id}>
+              <div className="row">
+                    <div className="col-xs-8">
+                        <div className="form-inline">
+                            {users.name} {users.surname}
+                        </div>
+                    </div>
+                    <div className="col-xs-2">
+                        <button onClick={() => this.deleteUser(users.id)} className="btn btn-warning btn-block">Delete</button>
+                    </div>
+                    <div className="col-xs-2">
+                        <Link  to={`/users/${users.id}`} className="btn btn-primary btn-block">View / Edit</Link>  
+                    </div>
+                </div>
             </li>
           );
         });
@@ -30,7 +48,7 @@ class UsersShow extends React.Component<AppProps> {
     render() {
         
         return (
-            <ul>{this.renderUsers()}</ul>
+            <ul className="list-group">{this.renderUsers()}</ul>
             );
     }
 }
