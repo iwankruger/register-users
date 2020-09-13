@@ -1,11 +1,14 @@
 import { combineReducers } from 'redux';
 import { dummyReducer } from './dummyReducer';
-import { DummyData, DummyDataFetchAction } from '../actions';
+import { usersReducer } from './usersReducer';
+import { DummyData, UsersInterface } from '../actions';
 
 export interface StoreState {
-    dummy: DummyData[]
+    dummy: DummyData[],
+    users: UsersInterface[]
 }
 
 export default combineReducers<StoreState>({ 
-    dummy: dummyReducer  
+    dummy: dummyReducer,
+    users: usersReducer  
 });

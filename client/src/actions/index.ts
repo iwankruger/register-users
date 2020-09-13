@@ -1,2 +1,3 @@
-export * from './dummy';
 export * from './types';
+export * from './dummy';
+export * from './usersActions';

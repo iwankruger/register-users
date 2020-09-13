@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import reducers from './reducers';
 import { App } from './components/App';
-import ShowUsers from './components/ShowUsers';
+import UsersShow from './components/UsersShow';
 
 // for state debugging plugin replace in production with
 //const store = createStore(reducers, applyMiddleware(thunk));
@@ -21,7 +21,7 @@ ReactDOM.render(
         <BrowserRouter>
             <div>
                 <Switch>
-                    <Route path="/users" component={ShowUsers} />
+                    <Route path="/users" component={UsersShow} />
                     <Route path="/dummy" component={App} />
                 </Switch>
             </div>

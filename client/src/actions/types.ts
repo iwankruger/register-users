@@ -1,8 +1,10 @@
 import { DummyDataFetchAction, DummyDataDeleteAction } from './dummy';
+import { FetchUsersInterface } from './usersActions';
 
 export enum ActionTypes {
     dummyAction,
-    dummyDelete
+    dummyDelete,
+    usersFetch
 }
 
-export type Action = DummyDataFetchAction | DummyDataDeleteAction;
+export type Action = DummyDataFetchAction | DummyDataDeleteAction | FetchUsersInterface;
