@@ -3,19 +3,31 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { StoreState } from '../reducers';
-import { UsersInterface, fetchUsers } from '../actions';
+import { UsersFetchInterface, fetchUsers } from '../actions';
 import ReactPaginate from 'react-paginate';
 
 
 interface AppProps {
-    users: UsersInterface[];
+    userData: UsersFetchInterface;
     fetchUsers: Function; // bypass redux-thunk returning a function and typescript complaining about type
 }
 
 class UsersShow extends React.Component<AppProps> {
 
+    state = { pageCount: 10 };
+
     componentDidMount() {
         this.props.fetchUsers();
+        const pageCount = Math.ceil(this.props.userData.totalCount / this.props.userData.limit);
+        this.setState({ pageCount });
+    }
+
+    componentDidUpdate(prevProps: AppProps): void {
+
+        if (prevProps.userData.totalCount !== this.props.userData.totalCount) {
+            const pageCount = Math.ceil(this.props.userData.totalCount / this.props.userData.limit);
+            this.setState({ pageCount });
+        }
     }
 
     deleteUser(id: number): void {
@@ -24,7 +36,7 @@ class UsersShow extends React.Component<AppProps> {
 
 
     renderUsers(): JSX.Element[] {
-        return _.map(this.props.users, users => {
+        return _.map(this.props.userData.users, users => {
           return (
             <li className="list-group-item" key={users.id}>
               <div className="row">
@@ -45,11 +57,11 @@ class UsersShow extends React.Component<AppProps> {
         });
     }
 
-    handlePageClick = (selectedItem: { selected: number }): void => {
-        console.log(selectedItem.selected);
-
-        this.props.fetchUsers(1,2);
-
+    handlePageClick = (selectedPage: { selected: number }): void => {
+        // calculate offset from page selected
+        const limit = this.props.userData.limit
+        const newOffset = (selectedPage.selected + 1) * limit - limit;
+        this.props.fetchUsers(limit, newOffset);
     }
 
     render() {
@@ -62,7 +74,7 @@ class UsersShow extends React.Component<AppProps> {
                         previousLabel={'previous'}
                         nextLabel={'next'}
                         breakLabel={'...'}
-                        pageCount={10}
+                        pageCount={this.state.pageCount}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}
                         onPageChange={this.handlePageClick}
@@ -84,8 +96,8 @@ class UsersShow extends React.Component<AppProps> {
 }
 
 
-const mapStateToProps = (state: StoreState): { users: UsersInterface[] } => {
-    return { users: state.users  };
+const mapStateToProps = (state: StoreState): { userData: UsersFetchInterface } => {
+    return { userData: state.userData  };
   };
 
 export default connect(mapStateToProps, { fetchUsers })(UsersShow);

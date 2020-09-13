@@ -1,6 +1,13 @@
-import { UsersInterface, ActionTypes, Action } from '../actions';
+import { UsersFetchInterface, ActionTypes, Action } from '../actions';
 
-export const usersReducer = (state: UsersInterface[] = [], action: Action) => {
+const INITIAL_STATE: UsersFetchInterface  = {
+    users: [], 
+    totalCount: 0, 
+    limit: 5, 
+    offset: 0 
+}
+
+export const usersReducer = (state: UsersFetchInterface = INITIAL_STATE, action: Action) => {
     console.log('REDUCER USER');
     switch (action.type) {
         case ActionTypes.usersFetch:

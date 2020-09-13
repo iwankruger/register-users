@@ -1,14 +1,16 @@
 import { combineReducers } from 'redux';
 import { dummyReducer } from './dummyReducer';
 import { usersReducer } from './usersReducer';
-import { DummyData, UsersInterface } from '../actions';
+import { DummyData, UsersFetchInterface } from '../actions';
 
 export interface StoreState {
     dummy: DummyData[],
-    users: UsersInterface[]
+    userData: UsersFetchInterface
 }
+
+// { users: UsersInterface[], totalCount: number, limit?: number, offset?: number }
 
 export default combineReducers<StoreState>({ 
     dummy: dummyReducer,
-    users: usersReducer  
+    userData: usersReducer  
 });
