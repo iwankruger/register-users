@@ -8,9 +8,12 @@ import reducers from './reducers';
 import { App } from './components/App';
 import ShowUsers from './components/ShowUsers';
 
-//const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducers, applyMiddleware(thunk));
-//const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
+// for state debugging plugin replace in production with
+//const store = createStore(reducers, applyMiddleware(thunk));
+const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
+
+
 
 
 ReactDOM.render(
