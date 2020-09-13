@@ -25,7 +25,7 @@ export interface FetchUsersInterface {
     payload: UsersInterface[];
 }
 
-export const fetchUsers = () => {
+export const fetchUsers = (limit?: number, offset?: number) => {
     console.log('fetch users action');
     const users = [{
         id: 1,

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { StoreState } from '../reducers';
 import { UsersInterface, fetchUsers } from '../actions';
+import ReactPaginate from 'react-paginate';
 
 
 interface AppProps {
@@ -42,13 +43,42 @@ class UsersShow extends React.Component<AppProps> {
             </li>
           );
         });
-      }
+    }
 
+    handlePageClick = (selectedItem: { selected: number }): void => {
+        console.log(selectedItem.selected);
+
+        this.props.fetchUsers(1,2);
+
+    }
 
     render() {
         
         return (
-            <ul className="list-group">{this.renderUsers()}</ul>
+            <div>
+                <ul className="list-group">{this.renderUsers()}</ul>
+                <div className="text-xs-right">
+                    <ReactPaginate
+                        previousLabel={'previous'}
+                        nextLabel={'next'}
+                        breakLabel={'...'}
+                        pageCount={10}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        breakClassName={'page-item'}
+                        breakLinkClassName={'page-link'}
+                        containerClassName={'pagination'}
+                        pageClassName={'page-item'}
+                        pageLinkClassName={'page-link'}
+                        previousClassName={'page-item'}
+                        previousLinkClassName={'page-link'}
+                        nextClassName={'page-item'}
+                        nextLinkClassName={'page-link'}
+                        activeClassName={'active'}
+                    />
+                </div>
+            </div>
             );
     }
 }
