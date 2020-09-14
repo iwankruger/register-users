@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import reducers from './reducers';
 import { App } from './components/App';
 import UsersShow from './components/UsersShow';
+import UsersAddOrEdit from './components/UsersAddOrEdit';
 
 // for state debugging plugin replace in production with
 //const store = createStore(reducers, applyMiddleware(thunk));
@@ -21,6 +22,7 @@ ReactDOM.render(
         <BrowserRouter>
             <div>
                 <Switch>
+                    <Route path="/users/:id" component={UsersAddOrEdit} />
                     <Route path="/users" component={UsersShow} />
                     <Route path="/dummy" component={App} />
                 </Switch>
