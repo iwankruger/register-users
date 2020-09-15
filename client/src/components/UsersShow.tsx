@@ -71,27 +71,27 @@ class UsersShow extends React.Component<AppProps> {
                 <ul className="list-group">{this.renderUsers()}</ul>
                 <div className="text-xs-right">
                     <ReactPaginate
-                        previousLabel={'previous'}
-                        nextLabel={'next'}
-                        breakLabel={'...'}
+                        previousLabel={"previous"}
+                        nextLabel={"next"}
+                        breakLabel={"..."}
                         pageCount={this.state.pageCount}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}
                         onPageChange={this.handlePageClick}
-                        breakClassName={'page-item'}
-                        breakLinkClassName={'page-link'}
-                        containerClassName={'pagination'}
-                        pageClassName={'page-item'}
-                        pageLinkClassName={'page-link'}
-                        previousClassName={'page-item'}
-                        previousLinkClassName={'page-link'}
-                        nextClassName={'page-item'}
-                        nextLinkClassName={'page-link'}
-                        activeClassName={'active'}
+                        breakClassName={"page-item"}
+                        breakLinkClassName={"page-link"}
+                        containerClassName={"pagination"}
+                        pageClassName={"page-item"}
+                        pageLinkClassName={"page-link"}
+                        previousClassName={"page-item"}
+                        previousLinkClassName={"page-link"}
+                        nextClassName={"page-item"}
+                        nextLinkClassName={"page-link"}
+                        activeClassName={"active"}
                     />
                 </div>
             </div>
-            );
+        );
     }
 }
 
