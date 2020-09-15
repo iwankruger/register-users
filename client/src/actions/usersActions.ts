@@ -114,3 +114,31 @@ export const fetchUserDetail = (id: number) => {
         });
     };
 };
+
+export const addOrUpdateUser = (user: UsersInterface, callback: () => void) => {
+    console.log('add or update user user detail action');
+    
+    let userUpdated = false;
+    for(let i = 0; i < users.length; i++) {
+        if (users[i].id === user.id) {
+            console.log('found user');
+            userUpdated = true;
+            users[i] = user; 
+        }
+    }
+    callback();
+
+    
+
+    const data = users;
+
+    console.log(users);
+    
+    return (dispatch: Dispatch) => {
+
+        dispatch<FetchUsersInterface>({ 
+            type: ActionTypes.usersFetch, 
+            payload: { users: data, totalCount: 11, limit: 5, offset: 0 } 
+        });
+    };
+};
