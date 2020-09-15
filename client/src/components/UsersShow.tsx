@@ -74,7 +74,14 @@ class UsersShow extends React.Component<AppProps> {
         
         return (
             <div>
-                <ul className="list-group">{this.renderUsers()}</ul>
+                <div className="d-flex justify-content-end">
+                    <Link className="btn btn-primary float-right1" to="/users/new">
+                        Add a User
+                    </Link>
+                </div>
+                <div className="pt-3">
+                    <ul className="list-group">{this.renderUsers()}</ul>
+                </div>
     
                 <div className="float-right pt-3">
                     <ReactPaginate
