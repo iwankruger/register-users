@@ -21,6 +21,8 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
             console.log('user selected id = ', this.props.match.params.id);
             this.props.fetchUserDetail(this.props.match.params.id);
         }
+        //console.log('DDDDD ',this.state.form)
+        //this.setState({initialValues: {name: 'hello'}});
     }
 
     renderField(field: any) {
@@ -53,6 +55,7 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
                 <Field
                     label="Name"
                     name="name"
+                    //component="input" type="text"
                     component={this.renderField}
                 />
             </form>
@@ -62,12 +65,29 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
 
 
 
-const mapStateToProps = (state: StoreState): { userData: UsersStateInterface } => {
+const mapStateToProps = (state: StoreState): { userData: UsersStateInterface, initialValues: {} } => {
     console.log('DDDDD ',state)
-    return { userData: state.userData };
+    console.log('DDDDD ',state.userData.user.name)
+    return { 
+        userData: state.userData,
+        initialValues: {name: state.userData.user.name}
+     };
 };
 
-export default reduxForm({
-    form: 'PostsNewForm'
-  })(connect(mapStateToProps, { fetchUserDetail })(UsersAddOrEdit));
+// the following method of connecting reduxForm 
+// with connected worked However the props were not passed down to the reduxForm
+// export default reduxForm({
+//     form: 'UserDetailsForm',
+//     enableReinitialize: true,
+//     initialValues: {name: 'hello'}
+//   })(connect(mapStateToProps, { fetchUserDetail })(UsersAddOrEdit));
+
+const reduxFormInstance = reduxForm<any, any>({
+    form: 'UserDetailsForm',
+    enableReinitialize: true,
+    //initialValues: {name: 'hello'}
+  })(UsersAddOrEdit);
+
+export default connect(mapStateToProps, { fetchUserDetail })(reduxFormInstance)
+
   
