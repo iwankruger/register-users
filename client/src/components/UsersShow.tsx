@@ -40,16 +40,16 @@ class UsersShow extends React.Component<AppProps> {
         return _.map(this.props.userData.users, users => {
           return (
             <li className="list-group-item" key={users.id}>
-              <div className="row">
-                    <div className="col-xs-8">
+                <div className="row">
+                    <div className="col-md-8">
                         <div className="form-inline">
                             {users.name} {users.surname}
                         </div>
                     </div>
-                    <div className="col-xs-2">
-                        <button onClick={() => this.deleteUser(users.id)} className="btn btn-warning btn-block">Delete</button>
+                    <div className="col-md-2">
+                        <button onClick={() => this.deleteUser(users.id)} className="btn btn-danger btn-block">Delete</button>
                     </div>
-                    <div className="col-xs-2">
+                    <div className="col-md-2">
                         <Link  to={`/users/${users.id}`} className="btn btn-primary btn-block">View / Edit</Link>  
                     </div>
                 </div>
@@ -70,7 +70,8 @@ class UsersShow extends React.Component<AppProps> {
         return (
             <div>
                 <ul className="list-group">{this.renderUsers()}</ul>
-                <div className="text-xs-right">
+    
+                <div className="float-right pt-3">
                     <ReactPaginate
                         previousLabel={"previous"}
                         nextLabel={"next"}
