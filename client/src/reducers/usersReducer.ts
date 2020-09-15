@@ -1,18 +1,31 @@
-import { UsersFetchInterface, ActionTypes, Action } from '../actions';
+import { UsersFetchInterface, UsersInterface, ActionTypes, Action } from '../actions';
 
-const INITIAL_STATE: UsersFetchInterface  = {
+export type UsersStateInterface = UsersFetchInterface & { user: UsersInterface };
+
+
+const INITIAL_STATE: UsersStateInterface  = {
     users: [], 
     totalCount: 0, 
     limit: 5, 
-    offset: 0 
+    offset: 0,
+    user: {
+        id: 0,
+        name: '',
+        surname: '',
+        email: ''
+    }
 }
 
-export const usersReducer = (state: UsersFetchInterface = INITIAL_STATE, action: Action) => {
+export const usersReducer = (state: UsersStateInterface = INITIAL_STATE, action: Action) => {
     console.log('REDUCER USER');
     switch (action.type) {
         case ActionTypes.usersFetch:
             console.log('PAYLOAD FETCH  ', action.payload);
-            return action.payload;
+            return { ...state, ...action.payload };
+        case ActionTypes.userDetailFetch:
+            console.log('PAYLOAD USER DETAIL  ', action.payload);
+            return { ...state, user: action.payload };
+            //return { ...state, hello: action.payload };
         default:
       return state;
   }

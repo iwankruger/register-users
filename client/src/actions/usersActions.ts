@@ -77,6 +77,11 @@ export interface FetchUsersInterface {
     payload: UsersFetchInterface;
 }
 
+export interface FetchUserDetailInterface {
+    type: ActionTypes.userDetailFetch;
+    payload: UsersInterface;
+}
+
 export const fetchUsers = (limit?: number, offset?: number) => {
     console.log('fetch users action');
     
@@ -92,6 +97,20 @@ export const fetchUsers = (limit?: number, offset?: number) => {
         dispatch<FetchUsersInterface>({ 
             type: ActionTypes.usersFetch, 
             payload: { users: data, totalCount: 11, limit: limitNew, offset: offsetNew } 
+        });
+    };
+};
+
+export const fetchUserDetail = (id: number) => {
+    console.log('fetch user detail action');
+    
+    const data = users[id-1];
+    
+    return (dispatch: Dispatch) => {
+
+        dispatch<FetchUserDetailInterface>({ 
+            type: ActionTypes.userDetailFetch, 
+            payload: data
         });
     };
 };

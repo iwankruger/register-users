@@ -1,11 +1,27 @@
-import React from 'react';
+import React/*, { Props }*/ from 'react';
 import { connect } from 'react-redux';
-import { Field, FieldArray, reduxForm, InjectedFormProps, FormProps } from 'redux-form';
+import { Field, FieldArray, reduxForm, InjectedFormProps, FormProps, WrappedFieldProps } from 'redux-form';
+import { fetchUserDetail } from '../actions';
+import { StoreState } from '../reducers';
+import { UsersStateInterface } from '../reducers/usersReducer';
 
+
+interface AppProps {
+    userData: UsersStateInterface;
+    fetchUserDetail: Function; // bypass redux-thunk returning a function and typescript complaining about type
+    match?: { params?: any };
+}
 
 //class UsersAddOrEdit extends React.Component<InjectedFormProps, {}> {
 // class UsersAddOrEdit extends React.Component<InjectedFormProps> {
-class UsersAddOrEdit extends React.Component<InjectedFormProps> {
+class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
+
+    componentDidMount() {
+        if (this.props.match && this.props.match.params && this.props.match.params.id) {
+            console.log('user selected id = ', this.props.match.params.id);
+            this.props.fetchUserDetail(this.props.match.params.id);
+        }
+    }
 
     renderField(field: any) {
         // es6 for to pull properties from object
@@ -44,11 +60,14 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps> {
     }
 }
 
-const mapStateToProps = () => {
-    return { };
-  };
+
+
+const mapStateToProps = (state: StoreState): { userData: UsersStateInterface } => {
+    console.log('DDDDD ',state)
+    return { userData: state.userData };
+};
 
 export default reduxForm({
     form: 'PostsNewForm'
-  })(connect(null)(UsersAddOrEdit));
+  })(connect(mapStateToProps, { fetchUserDetail })(UsersAddOrEdit));
   

@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { StoreState } from '../reducers';
-import { UsersFetchInterface, fetchUsers } from '../actions';
+import { fetchUsers } from '../actions';
 import ReactPaginate from 'react-paginate';
+import { UsersStateInterface } from '../reducers/usersReducer';
 
 
 interface AppProps {
-    userData: UsersFetchInterface;
+    userData: UsersStateInterface;
     fetchUsers: Function; // bypass redux-thunk returning a function and typescript complaining about type
 }
 
@@ -96,7 +97,7 @@ class UsersShow extends React.Component<AppProps> {
 }
 
 
-const mapStateToProps = (state: StoreState): { userData: UsersFetchInterface } => {
+const mapStateToProps = (state: StoreState): { userData: UsersStateInterface } => {
     return { userData: state.userData  };
   };
 
