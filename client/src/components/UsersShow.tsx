@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { StoreState } from '../reducers';
-import { fetchUsers } from '../actions';
+import { fetchUsers, deleteUser } from '../actions';
 import ReactPaginate from 'react-paginate';
 import { UsersStateInterface } from '../reducers/usersReducer';
 
@@ -11,11 +11,12 @@ import { UsersStateInterface } from '../reducers/usersReducer';
 interface AppProps {
     userData: UsersStateInterface;
     fetchUsers: Function; // bypass redux-thunk returning a function and typescript complaining about type
+    deleteUser: Function; // bypass redux-thunk returning a function and typescript complaining about type
 }
 
 class UsersShow extends React.Component<AppProps> {
 
-    state = { pageCount: 10 };
+    state = { pageCount: 10, pageSelected: 0 };
 
     componentDidMount() {
         this.props.fetchUsers();
@@ -32,8 +33,11 @@ class UsersShow extends React.Component<AppProps> {
     }
 
     deleteUser(id: number): void {
-
+        const limit = this.props.userData.limit
+        const newOffset = (this.state.pageSelected + 1) * limit - limit;
+        this.props.deleteUser(id, limit, newOffset);  
     }
+
 
 
     renderUsers(): JSX.Element[] {
@@ -59,6 +63,7 @@ class UsersShow extends React.Component<AppProps> {
     }
 
     handlePageClick = (selectedPage: { selected: number }): void => {
+        this.setState({ pageSelected: selectedPage.selected});
         // calculate offset from page selected
         const limit = this.props.userData.limit
         const newOffset = (selectedPage.selected + 1) * limit - limit;
@@ -102,4 +107,4 @@ const mapStateToProps = (state: StoreState): { userData: UsersStateInterface } =
     return { userData: state.userData  };
   };
 
-export default connect(mapStateToProps, { fetchUsers })(UsersShow);
+export default connect(mapStateToProps, { fetchUsers, deleteUser })(UsersShow);

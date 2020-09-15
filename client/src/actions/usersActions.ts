@@ -91,12 +91,12 @@ export const fetchUsers = (limit?: number, offset?: number) => {
     const end = offsetNew + limitNew; //users.length;
     const data = users.slice(offset, end);
 
-    console.log({ users: data, totalCount: 11, limit: limitNew, offset: offsetNew });
+    console.log({ users: data, totalCount: users.length, limit: limitNew, offset: offsetNew });
     return (dispatch: Dispatch) => {
 
         dispatch<FetchUsersInterface>({ 
             type: ActionTypes.usersFetch, 
-            payload: { users: data, totalCount: 11, limit: limitNew, offset: offsetNew } 
+            payload: { users: data, totalCount: users.length, limit: limitNew, offset: offsetNew } 
         });
     };
 };
@@ -116,7 +116,7 @@ export const fetchUserDetail = (id: number) => {
 };
 
 export const addOrUpdateUser = (user: UsersInterface, callback: () => void) => {
-    console.log('add or update user user detail action');
+    console.log('add or update user action');
     
     let userUpdated = false;
     for(let i = 0; i < users.length; i++) {
@@ -143,7 +143,22 @@ export const addOrUpdateUser = (user: UsersInterface, callback: () => void) => {
 
         dispatch<FetchUsersInterface>({ 
             type: ActionTypes.usersFetch, 
-            payload: { users: data, totalCount: 11, limit: 5, offset: 0 } 
+            payload: { users: data, totalCount: users.length, limit: 5, offset: 0 } 
         });
     };
+};
+
+export const deleteUser = (id: number, limit: number, offset: number) => {
+    console.log('delete user action');
+    
+    for(let i = 0; i < users.length; i++) {
+        if (users[i].id === id) {
+            console.log('found user');
+            users.splice(i, 1);
+        }
+    }
+
+    console.log(users);
+
+    return fetchUsers(limit, offset);
 };
