@@ -9,7 +9,7 @@ const INITIAL_STATE: UsersStateInterface  = {
     limit: 5, 
     offset: 0,
     user: {
-        id: 0,
+        id: -1,
         name: '',
         surname: '',
         email: ''

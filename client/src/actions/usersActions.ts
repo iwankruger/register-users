@@ -2,57 +2,57 @@ import { Dispatch } from 'redux';
 import { ActionTypes } from './types'
 
 const users = [{
-    id: 1,
+    id: 0,
     name: 'Ricky',
     surname: 'Ponting',
     email: 'ricky@ponting.com'
 },{
-    id: 2,
+    id: 1,
     name: 'AB',
     surname: 'De Villiers',
     email: 'ab@devilliers.com'
 },{
-    id: 3,
+    id: 2,
     name: 'Jacques',
     surname: 'Kallis',
     email: 'jacques@kallis.com'
 },{
-    id: 4,
+    id: 3,
     name: 'Sachin',
     surname: 'Tendulkar',
     email: 'sachin@tendulkar.com'
 },{
-    id: 5,
+    id: 4,
     name: 'Brian',
     surname: 'Lara',
     email: 'brian@lara.com'
 },{
-    id: 6,
+    id: 5,
     name: 'Virat',
     surname: 'Kohli',
     email: 'virat@kohli.com'
 },{
-    id: 7,
+    id: 6,
     name: 'Adam',
     surname: 'Gilchrist',
     email: 'adam@gilchrist.com'
 },{
-    id: 8,
+    id: 7,
     name: 'Shane',
     surname: 'Warne',
     email: 'shane@warne.com'
 },{
-    id: 9,
+    id: 8,
     name: 'Brett',
     surname: 'Lee',
     email: 'brett@lee.com'
 },{
-    id: 11,
+    id: 9,
     name: 'Dale',
     surname: 'Steyn',
     email: 'dale@steyn.com'
 },{
-    id: 12,
+    id: 10,
     name: 'Glenn',
     surname: 'McGrath',
     email: 'glenn@mcgrath.com'
@@ -104,7 +104,7 @@ export const fetchUsers = (limit?: number, offset?: number) => {
 export const fetchUserDetail = (id: number) => {
     console.log('fetch user detail action');
     
-    const data = users[id-1];
+    const data = users[id];
     
     return (dispatch: Dispatch) => {
 
@@ -126,14 +126,19 @@ export const addOrUpdateUser = (user: UsersInterface, callback: () => void) => {
             users[i] = user; 
         }
     }
-    callback();
-
     
+    const nextId = users.length;
 
+    // if user could not be found add user
+    if (!userUpdated) users.push({...user, id: nextId});
+    
     const data = users;
 
     console.log(users);
     
+
+    callback();
+
     return (dispatch: Dispatch) => {
 
         dispatch<FetchUsersInterface>({ 
