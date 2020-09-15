@@ -107,9 +107,9 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
                     name="email"
                     component={this.renderField}
                 />
-                <div className="text-xs-right">
-                    <button type="submit" className="btn btn-primary">Submit</button>
-                    <Link to="/users" className="btn btn-danger">Cancel</Link>
+                <div className="text-xs-right btn-toolbar">
+                        <Link to="/users" className="btn btn-danger btn-block1">Cancel</Link>
+                        <button type="submit" className="btn btn-primary btn-block1">Save</button>
                 </div>
             </form>
         );
