@@ -7,7 +7,20 @@ function logger(req: Request, res: Response, next: NextFunction) {
     next();
 }
 
-// export = router;
+function validateUserPost(...keys: string[]) {
+    return (req: Request, res: Response, next: NextFunction) => {
+        console.log('Validate body');
+        if (!req.body) {
+            return res.status(422).send('Invalid request');
+        }
+        for (const key of keys) {
+            console.log(key)
+            if (!req.body[key]) return res.status(422).send('Invalid request');
+        }
+        next();
+    }
+}
+
 @controller('/api')
 class User {
 
@@ -18,8 +31,9 @@ class User {
     }
 
     @post('/users')
-    @bodyValidator('name','surname', 'email')
+    //@bodyValidator('name','surname', 'email')
     @use(logger)
+    @use(validateUserPost('name','surname', 'email'))
     postLogin(req: Request, res: Response, next: NextFunction): any {
         return res.send('hello users post');
     }
