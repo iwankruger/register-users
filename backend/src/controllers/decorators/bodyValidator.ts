@@ -8,13 +8,13 @@ export interface BodyValidatorDecoratorParameters {
     [key: string]: (BodyValidatorFunction)[];
 }
 
-export const validateString: BodyValidatorFunction = (value) => {
+export const isString: BodyValidatorFunction = (value) => {
     if (!value) return { result: true, message: null };
     if (typeof value === 'string') return { result: true, message: null };
     return { result: false, message: 'type string required' };
 }
 
-export const required: BodyValidatorFunction = (value) => {
+export const isRequired: BodyValidatorFunction = (value) => {
     if (value) return { result: true, message: null };
     return { result: false, message: 'required' };
 }

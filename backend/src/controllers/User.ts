@@ -1,5 +1,5 @@
 import { Router, NextFunction, Request, Response } from 'express';
-import { get, post, patch, del, controller, use, bodyValidator, validateString, required, isEmail } from './decorators';
+import { get, post, patch, del, controller, use, bodyValidator, isString, isRequired, isEmail } from './decorators';
 
 
 function logger(req: Request, res: Response, next: NextFunction) {
@@ -34,7 +34,7 @@ class User {
     }
 
     @post('/users')
-    @bodyValidator({name: [required, validateString], surname: [required, validateString], email: [required, isEmail]})
+    @bodyValidator({name: [isRequired, isString], surname: [isRequired, isString], email: [isRequired, isEmail]})
     postUser(req: Request, res: Response, next: NextFunction): any {
         return res.send('users add');
     }
