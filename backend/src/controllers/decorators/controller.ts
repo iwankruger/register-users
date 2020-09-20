@@ -19,10 +19,10 @@ function bodyValidators(keys: string): RequestHandler {
 
 
 export function controller(routePrefix: string): any {
-    return (target: Function) => {
+    return (target: () => void) => {
         const router = AppRouter.getInstance();
         console.log('controller ');
-        for (let key in target.prototype) {
+        for (const key of Object.keys(target.prototype)) {
             const routeHandler = target.prototype[key];
             const path = Reflect.getMetadata(MetadataKeys.path, target.prototype, key);
             const method: Methods = Reflect.getMetadata(MetadataKeys.method, target.prototype, key);
@@ -33,6 +33,5 @@ export function controller(routePrefix: string): any {
 
             if (path) router[method](`${routePrefix}${path}`, ...middlewares, validator, routeHandler);
         }
-        
     };
 }
