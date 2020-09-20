@@ -1,9 +1,10 @@
-import * as bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 import express, { NextFunction, Request, Response } from 'express';
+import user from './controllers/user';
 
 const app = express();
 
-import user from './controllers/user';
+app.use(bodyParser.json());
 
 app.get('/', (eq: Request, res: Response) => {
     res.send(`<div>hell world!!!</div>`)
