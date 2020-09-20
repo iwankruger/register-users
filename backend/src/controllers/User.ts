@@ -32,6 +32,13 @@ const required: BodyValidatorFunction = (value) => {
     return { result: false, message: 'required' };
 }
 
+const isEmail: BodyValidatorFunction = (value) => {
+    if (!value) return { result: true, message: null };
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (re.test(String(value))) return { result: true, message: null };
+    return { result: false, message: 'invalid email address' };
+}
+
 @controller('/api')
 class User {
 
@@ -42,7 +49,7 @@ class User {
     }
 
     @post('/users')
-    @bodyValidator({name: [required, validateString], surname: [required, validateString], email: [required, validateString]})
+    @bodyValidator({name: [required, validateString], surname: [required, validateString], email: [required, isEmail]})
     @use(logger)
     //@use(validateUserPost('name','surname', 'email'))
     postLogin(req: Request, res: Response, next: NextFunction): any {
