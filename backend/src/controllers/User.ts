@@ -1,5 +1,5 @@
 import { Router, NextFunction, Request, Response } from 'express';
-import { get, post, controller, use, bodyValidator } from './decorators';
+import { get, post, controller, use, bodyValidator, BodyValidatorFunction } from './decorators';
 
 
 function logger(req: Request, res: Response, next: NextFunction) {
@@ -21,13 +21,13 @@ function validateUserPost(...keys: string[]) {
     }
 }
 
-function validateString(value: any): { result: boolean, message: string | null } {
+const validateString: BodyValidatorFunction = (value) => {
     if (!value) return { result: true, message: null };
     if (typeof value === 'string') return { result: true, message: null };
     return { result: false, message: 'type string required' };
 }
 
-function required(value: any): { result: boolean, message: string | null } {
+const required: BodyValidatorFunction = (value) => {
     if (value) return { result: true, message: null };
     return { result: false, message: 'required' };
 }
@@ -42,7 +42,7 @@ class User {
     }
 
     @post('/users')
-    @bodyValidator({name: [validateString], surname: [required, validateString], email: [required, validateString]})
+    @bodyValidator({name: [required, validateString], surname: [required, validateString], email: [required, validateString]})
     @use(logger)
     //@use(validateUserPost('name','surname', 'email'))
     postLogin(req: Request, res: Response, next: NextFunction): any {
