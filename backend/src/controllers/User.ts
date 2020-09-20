@@ -1,5 +1,5 @@
 import { Router, NextFunction, Request, Response } from 'express';
-import { get, controller, use } from './decorators';
+import { get, post, controller, use, bodyValidator } from './decorators';
 
 // interface RequestWithBody extends Request {
 //     body: { [key: string]: string | undefined };
@@ -32,10 +32,14 @@ class User {
     @get('/users')
     @use(logger)
     getLogin(req: Request, res: Response, next: NextFunction): any {
-        return res.send('hello users2');
+        return res.send('hello users get');
+    }
+
+    @post('/users')
+    @bodyValidator('name','surname', 'email')
+    @use(logger)
+    postLogin(req: Request, res: Response, next: NextFunction): any {
+        return res.send('hello users post');
     }
 
 }
-
-//export User;
-
