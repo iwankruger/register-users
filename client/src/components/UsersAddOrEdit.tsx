@@ -2,7 +2,7 @@ import React/*, { Props }*/ from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Field, FieldArray, reduxForm, InjectedFormProps, FormProps, WrappedFieldProps } from 'redux-form';
-import { fetchUserDetail, addOrUpdateUser } from '../actions';
+import { fetchUserDetail, addOrUpdateUser, fetchUserDetailBlank } from '../actions';
 import { StoreState } from '../reducers';
 import { UsersStateInterface } from '../reducers/usersReducer';
 
@@ -11,6 +11,7 @@ interface AppProps {
     userData: UsersStateInterface;
     fetchUserDetail: Function; // bypass redux-thunk returning a function and typescript complaining about type
     addOrUpdateUser: Function; // bypass redux-thunk returning a function and typescript complaining about type
+    fetchUserDetailBlank: Function; // bypass redux-thunk returning a function and typescript complaining about type
     match?: { params?: any };
     history?: any;
 }
@@ -36,7 +37,11 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
         ) {
             console.log("user selected id = ", this.props.match.params.id);
             const id = this.props.match.params.id;
-            if(!isNaN(id)) this.props.fetchUserDetail(this.props.match.params.id);
+            if(!isNaN(id)) {
+                this.props.fetchUserDetail(this.props.match.params.id);
+            } else {
+                this.props.fetchUserDetailBlank();
+            }
             
             //this.setState({userId: this.props.match.params.id})
         }
@@ -182,6 +187,6 @@ const reduxFormInstance = reduxForm<any, any>({
     //initialValues: {name: 'hello'}
   })(UsersAddOrEdit);
 
-export default connect(mapStateToProps, { fetchUserDetail, addOrUpdateUser })(reduxFormInstance)
+export default connect(mapStateToProps, { fetchUserDetail, addOrUpdateUser, fetchUserDetailBlank })(reduxFormInstance)
 
   

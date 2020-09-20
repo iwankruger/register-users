@@ -115,6 +115,25 @@ export const fetchUserDetail = (id: number) => {
     };
 };
 
+export const fetchUserDetailBlank = () => {
+    console.log('fetch user detail action');
+    
+    const data: UsersInterface = {
+        id: -1,
+        name: '',
+        surname: '',
+        email: ''
+    };
+    
+    return (dispatch: Dispatch) => {
+
+        dispatch<FetchUserDetailInterface>({ 
+            type: ActionTypes.userDetailFetch, 
+            payload: data
+        });
+    };
+};
+
 export const addOrUpdateUser = (user: UsersInterface, callback: () => void) => {
     console.log('add or update user action');
     
