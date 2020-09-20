@@ -1,5 +1,5 @@
 import { Router, NextFunction, Request, Response } from 'express';
-import { get, post, controller, use, bodyValidator, validateString, required, isEmail } from './decorators';
+import { get, post, patch, del, controller, use, bodyValidator, validateString, required, isEmail } from './decorators';
 
 
 function logger(req: Request, res: Response, next: NextFunction) {
@@ -28,16 +28,30 @@ class User {
 
     @get('/users')
     @use(logger)
-    getLogin(req: Request, res: Response, next: NextFunction): any {
-        return res.send('hello users get');
+    getUsers(req: Request, res: Response, next: NextFunction): any {
+        console.log('in function');
+        return res.send('users get all');
     }
 
     @post('/users')
     @bodyValidator({name: [required, validateString], surname: [required, validateString], email: [required, isEmail]})
-    @use(logger)
-    //@use(validateUserPost('name','surname', 'email'))
-    postLogin(req: Request, res: Response, next: NextFunction): any {
-        return res.send('hello users post');
+    postUser(req: Request, res: Response, next: NextFunction): any {
+        return res.send('users add');
+    }
+
+    @get('/users/:id')
+    getUser(req: Request, res: Response, next: NextFunction): any {
+        return res.send('user get');
+    }
+
+    @patch('/users/:id')
+    patchUser(req: Request, res: Response, next: NextFunction): any {
+        return res.send('user update');
+    }
+
+    @del('/users/:id')
+    deleteUser(req: Request, res: Response, next: NextFunction): any {
+        return res.send('user delete');
     }
 
 }

@@ -22,10 +22,10 @@ function bodyValidators(keys: { [key: string]: ((value: any) => { result: boolea
             }
         }
 
-        if (Object.keys(errorMessages).length >= 0) {
+        if (Object.keys(errorMessages).length > 0) {
             return res.status(422).send(errorMessages);
         }
-
+        
         next();
     }
 }
@@ -41,7 +41,6 @@ export function controller(routePrefix: string): any {
             const method: Methods = Reflect.getMetadata(MetadataKeys.method, target.prototype, key);
             const middlewareArray = Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key) || [];
             const requiredBodyProps = Reflect.getMetadata(MetadataKeys.validator, target.prototype, key) || [];
-
             const validator = bodyValidators(requiredBodyProps);
 
             if (path) router[method](`${routePrefix}${path}`, ...middlewareArray, validator, routeHandler);
