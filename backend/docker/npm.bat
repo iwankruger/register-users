@@ -1,0 +1,1 @@
+docker exec -it register-users-backend npm %*

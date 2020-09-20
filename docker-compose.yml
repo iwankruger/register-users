@@ -18,4 +18,4 @@ services:
     # depends_on:
     #  - "mssql"  
     #tty: true  
-    command: npm run start
+    command: npm run start:dev
