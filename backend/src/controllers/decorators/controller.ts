@@ -7,12 +7,8 @@ import { RequestHandler, NextFunction, Request, Response } from 'express';
 
 function bodyValidators(keys: { [key: string]: ((value: any) => { result: boolean, message: string | null })[] }): RequestHandler {
     return (req: Request, res: Response, next: NextFunction) => {
-        if (!req.body) {
-            return res.status(422).send('Invalid request');
-        }
-        if (keys.name && keys.name.length > 0) {
-            console.log(keys.name[0](req.body.name));
-        }
+        if (!req.body) return res.status(422).send('Invalid request');
+
         const errorMessages: { [key: string]: string[] } = {};
         // loop through parameter to check
         for (const parameter of Object.keys(keys)) {

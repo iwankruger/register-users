@@ -1,5 +1,5 @@
 import { Router, NextFunction, Request, Response } from 'express';
-import { get, post, controller, use, bodyValidator, BodyValidatorFunction } from './decorators';
+import { get, post, controller, use, bodyValidator, validateString, required, isEmail } from './decorators';
 
 
 function logger(req: Request, res: Response, next: NextFunction) {
@@ -21,23 +21,7 @@ function validateUserPost(...keys: string[]) {
     }
 }
 
-const validateString: BodyValidatorFunction = (value) => {
-    if (!value) return { result: true, message: null };
-    if (typeof value === 'string') return { result: true, message: null };
-    return { result: false, message: 'type string required' };
-}
 
-const required: BodyValidatorFunction = (value) => {
-    if (value) return { result: true, message: null };
-    return { result: false, message: 'required' };
-}
-
-const isEmail: BodyValidatorFunction = (value) => {
-    if (!value) return { result: true, message: null };
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (re.test(String(value))) return { result: true, message: null };
-    return { result: false, message: 'invalid email address' };
-}
 
 @controller('/api')
 class User {
