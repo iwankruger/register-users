@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  node:
+    build:
+      context: ./backend
+      dockerfile: ./docker/node/Dockerfile
+    environment:
+      NODE_ENV: "development-docker"
+    container_name: register-users-backend
+    volumes:
+      # mount project folder
+      - ./backend:/app
+      # do not mount node_modules folder
+      - /app/node_modules
+    ports:
+      - "5000:5000"
+      - "9229:9229"
+    # depends_on:
+    #  - "mssql"  
+    #tty: true  
+    command: npm run start
