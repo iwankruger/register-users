@@ -21,6 +21,17 @@ function validateUserPost(...keys: string[]) {
     }
 }
 
+function validateString(value: any): { result: boolean, message: string | null } {
+    if (!value) return { result: true, message: null };
+    if (typeof value === 'string') return { result: true, message: null };
+    return { result: false, message: 'type string required' };
+}
+
+function required(value: any): { result: boolean, message: string | null } {
+    if (value) return { result: true, message: null };
+    return { result: false, message: 'required' };
+}
+
 @controller('/api')
 class User {
 
@@ -31,9 +42,9 @@ class User {
     }
 
     @post('/users')
-    //@bodyValidator('name','surname', 'email')
+    @bodyValidator({name: [validateString], surname: [required, validateString], email: [required, validateString]})
     @use(logger)
-    @use(validateUserPost('name','surname', 'email'))
+    //@use(validateUserPost('name','surname', 'email'))
     postLogin(req: Request, res: Response, next: NextFunction): any {
         return res.send('hello users post');
     }

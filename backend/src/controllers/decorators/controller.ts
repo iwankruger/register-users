@@ -4,15 +4,31 @@ import { Methods } from './Methods';
 import { MetadataKeys } from './MetadataKeys';
 import { RequestHandler, NextFunction, Request, Response } from 'express';
 
-function bodyValidators(keys: string): RequestHandler {
+function bodyValidators(keys: { [key: string]: ((value: any) => { result: boolean, message: string | null })[] }): RequestHandler {
     return (req: Request, res: Response, next: NextFunction) => {
-        console.log('validate');
-        if(!req.body) {
+        if (!req.body) {
             return res.status(422).send('Invalid request');
         }
-        for(const key of keys) {
-            if(!req.body[key]) return res.status(422).send('Invalid request');
+        if (keys.name && keys.name.length > 0) {
+            console.log(keys.name[0](req.body.name));
         }
+        const errorMessages: { [key: string]: string[] } = {};
+        // loop through parameter to check
+        for (const parameter of Object.keys(keys)) {
+            // execute each supplied evaluator on specific parameter
+            for (const evaluator of keys[parameter]) {
+                const validate = evaluator(req.body[parameter]);
+                if (!validate.result && validate.message) {
+                    if (!errorMessages[parameter]) errorMessages[parameter] = [];
+                    errorMessages[parameter].push(validate.message);
+                }
+            }
+        }
+
+        if (Object.keys(errorMessages).length >= 0) {
+            return res.status(422).send(errorMessages);
+        }
+
         next();
     }
 }
