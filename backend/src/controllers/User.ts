@@ -1,5 +1,5 @@
 import { Router, NextFunction, Request, Response } from 'express';
-import { get, controller } from './decorators';
+import { get, controller, use } from './decorators';
 
 // interface RequestWithBody extends Request {
 //     body: { [key: string]: string | undefined };
@@ -20,13 +20,19 @@ import { get, controller } from './decorators';
 //     return res.send({ result: true });
 // });
 
+function logger(req: Request, res: Response, next: NextFunction) {
+    console.log('logging hello world!!!');
+    next();
+}
+
 // export = router;
 @controller('/api/v1')
 class User {
 
     @get('/users')
+    @use(logger)
     getLogin(req: Request, res: Response, next: NextFunction): any {
-        return res.send('hello users');
+        return res.send('hello users2');
     }
 
 }
