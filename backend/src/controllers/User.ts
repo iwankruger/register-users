@@ -1,9 +1,11 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import { get, post, patch, del, controller, use, bodyValidator, isString, isRequired, isEmail } from './decorators';
+import * as verify from '../verify';
 
 
 function logger(req: Request, res: Response, next: NextFunction) {
     console.log('logging hello world!!!');
+    console.log(req.body);
     next();
 }
 
@@ -27,6 +29,8 @@ function validateUserPost(...keys: string[]) {
 class User {
 
     @get('/users')
+    // @use(verify.verifyOrdinaryUserBasic)
+    @use(verify.verifyOrdinaryUserJwt)
     @use(logger)
     getUsers(req: Request, res: Response, next: NextFunction): any {
         console.log('in function');
@@ -52,6 +56,16 @@ class User {
     @del('/users/:id')
     deleteUser(req: Request, res: Response, next: NextFunction): any {
         return res.send('user delete');
+    }
+
+    @post('/users/login')
+    @bodyValidator({username: [isRequired, isString], password: [isRequired, isString]})
+    postUserLogin(req: Request, res: Response, next: NextFunction): any {
+        verify.getToken(req.body.username, req.body.password).then((token) => {
+            return res.send({ token });
+        }).catch((error) => {
+            return res.status(401).send('Unauthorized');
+        });
     }
 
 }

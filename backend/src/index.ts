@@ -1,13 +1,17 @@
 import bodyParser from 'body-parser';
+import passport from 'passport';
 import express, { NextFunction, Request, Response } from 'express';
 import { AppRouter } from './AppRouter';
 import './controllers/User';
+import * as verify from './verify';
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
-app.get('/', (eq: Request, res: Response) => {
+
+app.get('/', verify.verifyOrdinaryUserLocal, (eq: Request, res: Response) => {
     res.send(`<div>hell world!!!</div>`)
 });
 
