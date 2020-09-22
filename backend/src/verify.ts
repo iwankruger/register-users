@@ -44,7 +44,7 @@ export const getToken = (username: string, password: string): Promise<string> =>
 };
 
 interface RequestWithKey extends Request {
-    decoded: object | undefined
+    decoded?: object | undefined
 }
 
 export const verifyOrdinaryUserJwt = (req: RequestWithKey, res: Response, next: NextFunction) => {
