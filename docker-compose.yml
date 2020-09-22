@@ -1,5 +1,16 @@
 version: '3.7'
 services:
+  mysql:
+    build: ./backend/docker/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      # root password
+      MYSQL_ROOT_PASSWORD: password
+    container_name: register-users-mysql  
   node:
     build:
       context: ./backend
