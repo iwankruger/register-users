@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response, NextFunction  } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import passport from 'passport';
 import { BasicStrategy } from 'passport-http';
-import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as LocalStrategy, IVerifyOptions } from 'passport-local';
 
 // todo: store secret key in a secure location
 const JWT_SECRET_KEY = '1234-5678-9012';
 
-passport.use(new LocalStrategy((username: string, password: string, next: NextFunction): void => {
+passport.use(new LocalStrategy ((username: string, password: string, next: (error: any, user?: any, options?: IVerifyOptions) => void) => {
     console.log('debug local strategy ', username);
     // todo: get verify username and password against database
     if (username === 'admin' && password === 'password') {
@@ -18,7 +18,7 @@ passport.use(new LocalStrategy((username: string, password: string, next: NextFu
 
 }));
 
-passport.use(new BasicStrategy((username: string, password: string, next: NextFunction): void => {
+passport.use(new BasicStrategy((username: string, password: string, next: (error: any, user?: any, options?: IVerifyOptions) => void): void => {
     console.log('debug basic strategy ');
     // todo: get verify username and password against database
     if (username === 'admin' && password === 'password') {
@@ -43,7 +43,11 @@ export const getToken = (username: string, password: string): Promise<string> =>
     return Promise.reject(new Error('Unauthorized'));
 };
 
-export const verifyOrdinaryUserJwt = (req: Request, res: Response, next: NextFunction) => {
+interface RequestWithKey extends Request {
+    decoded: object | undefined
+}
+
+export const verifyOrdinaryUserJwt = (req: RequestWithKey, res: Response, next: NextFunction) => {
     console.log('debug jwt strategy ');
     // check header or url parameters or post parameters for token
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -51,7 +55,7 @@ export const verifyOrdinaryUserJwt = (req: Request, res: Response, next: NextFun
     if (!token) return res.status(401).send('Unauthorized');
 
     // decode token
-    jwt.verify(token, JWT_SECRET_KEY, (error, decoded) => {
+    jwt.verify(token, JWT_SECRET_KEY, (error: jwt.VerifyErrors | null, decoded: object | undefined) => {
         if (error) return res.status(401).send('Unauthorized');
 
         const key = 'decoded';
