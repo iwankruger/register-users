@@ -2,10 +2,6 @@ import { FindOptions } from 'sequelize';
 import { User as UserModel, UserAttributes, UserCreationAttributes } from '../database/models/user';
 import { Database } from '../database/Database'
 
-interface SequelizeQuery {
-    order?: [];
-}
-
 class User {
 
     public static async get(id?: number | null, limit?: number | null, offset?: number | null): Promise<UserModel[]> {
@@ -38,14 +34,31 @@ class User {
         }
     }
 
-    public static async add(user: UserCreationAttributes): Promise<{}> {
+    public static async save(user: UserCreationAttributes): Promise<boolean> {
         const t = await Database.getInstance().transaction();
         try {
-            const result = await UserModel.create(user);
-            return { result: true };
+            // create or update user
+            if (user.id) {
+                // update user
+                const result = await UserModel.update(user, { where: { id: user.id }, transaction: t });
+
+                // check result
+                if (!result || !Array.isArray(result) || result[0] === 0) {
+                    throw new Error('Unsuccessful update');
+                }
+
+            } else {
+                // create new user
+                const userNew: UserModel = await UserModel.create(user, { transaction: t });
+                console.log('new user ',userNew);
+            }
+
+            await t.commit();
+
+            return true;
 
         } catch (error) {
-            throw error;
+            return Promise.reject(error);
         }
     }
 

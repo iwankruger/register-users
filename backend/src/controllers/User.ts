@@ -57,7 +57,7 @@ class User {
     @use(verify.verifyOrdinaryUserJwt)
     @bodyValidator({name: [isRequired, isString], surname: [isRequired, isString], email: [isRequired, isEmail]})
     postUser(req: Request, res: Response, next: NextFunction): void {
-        UserService.add(req.body).then((result) => {
+        UserService.save(req.body).then((result) => {
             return res.send(result);
         }).catch((error) => {
             return res.status(500).send(error.message);
