@@ -4,11 +4,13 @@ import { Database } from '../Database';
 export interface UserAttributes {
     id: number;
     name: string;
-    // createdAt?: Date;
-    // updatedAt?: Date;
+    surname: string;
+    email: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 };
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+export interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 
 export class User extends Model<UserAttributes, UserCreationAttributes> {
     public id!: number;
@@ -30,10 +32,14 @@ User.init(
             type: new DataTypes.STRING(128),
             allowNull: false,
         },
-        // surname: {
-        //   type: new DataTypes.STRING(128),
-        //   allowNull: false,
-        // }
+        surname: {
+          type: new DataTypes.STRING(128),
+          allowNull: false,
+        },
+        email: {
+          type: new DataTypes.STRING(128),
+          allowNull: false,
+        }
     },
     {
         tableName: 'Users',

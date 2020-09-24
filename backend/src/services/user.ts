@@ -1,5 +1,6 @@
 import { FindOptions } from 'sequelize';
-import { User as UserModel } from '../database/models/user';
+import { User as UserModel, UserAttributes, UserCreationAttributes } from '../database/models/user';
+import { Database } from '../database/Database'
 
 interface SequelizeQuery {
     order?: [];
@@ -31,6 +32,17 @@ class User {
             // }).catch((error: any) => {
             //     console.log('catch ', error);
             // })
+
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+    public static async add(user: UserCreationAttributes): Promise<{}> {
+        const t = await Database.getInstance().transaction();
+        try {
+            const result = await UserModel.create(user);
+            return { result: true };
 
         } catch (error) {
             throw error;
