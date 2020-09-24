@@ -1,6 +1,7 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import { get, post, patch, del, controller, use, bodyValidator, isString, isRequired, isEmail } from './decorators';
 import * as verify from '../verify';
+import { User as UserService } from '../services/user';
 import { User as UserModel } from '../database/models';
 
 
@@ -34,17 +35,23 @@ class User {
     @use(verify.verifyOrdinaryUserJwt)
     @use(logger)
     getUsers(req: Request, res: Response, next: NextFunction): any {
-        console.log('in function');
-        UserModel.findAll().then((items: UserModel[]) => {
-            console.log('find find find find find  ', items);
-            console.log('item  ', items[0].getDataValue('id'));
-            console.log('item  ', items[0].id);
-            console.log('item  ', items[0]);
-            return res.send(items);
-        }).catch((error: any) => {
-            console.log('catch ', error);
-        })
-        // return res.send('users get all');
+
+        // get limit
+        let limit: null | number = null;
+        if (req.query && req.query.limit && !isNaN(Number(req.query.limit))) {
+            limit = Number(req.query.limit);
+        }
+        // get offset
+        let offset: null | number = null;
+        if (req.query && req.query.offset && !isNaN(Number(req.query.offset))) {
+            offset = Number(req.query.offset);
+        }
+
+        UserService.get(null, limit, offset).then((users) => {
+            return res.send(users);
+        }).catch((error) => {
+            return res.status(500).send(error.message);
+        });
     }
 
     @post('/users')
@@ -55,7 +62,13 @@ class User {
 
     @get('/users/:id')
     getUser(req: Request, res: Response, next: NextFunction): any {
-        return res.send('user get');
+        if (!req.params || !req.params.id || isNaN(Number(req.params.id))) return res.status(500).send('parameter id of type number missing');
+
+        UserService.get(Number(req.params.id)).then((users) => {
+            return res.send(users);
+        }).catch((error) => {
+            return res.status(500).send(error.message);
+        });
     }
 
     @patch('/users/:id')
