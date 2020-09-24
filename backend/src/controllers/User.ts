@@ -1,6 +1,7 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import { get, post, patch, del, controller, use, bodyValidator, isString, isRequired, isEmail } from './decorators';
 import * as verify from '../verify';
+import { User as UserModel } from '../database/models';
 
 
 function logger(req: Request, res: Response, next: NextFunction) {
@@ -29,12 +30,21 @@ function validateUserPost(...keys: string[]) {
 class User {
 
     @get('/users')
-    // @use(verify.verifyOrdinaryUserBasic)
+    // basic auth example @use(verify.verifyOrdinaryUserBasic)
     @use(verify.verifyOrdinaryUserJwt)
     @use(logger)
     getUsers(req: Request, res: Response, next: NextFunction): any {
         console.log('in function');
-        return res.send('users get all');
+        UserModel.findAll().then((items: UserModel[]) => {
+            console.log('find find find find find  ', items);
+            console.log('item  ', items[0].getDataValue('id'));
+            console.log('item  ', items[0].id);
+            console.log('item  ', items[0]);
+            return res.send(items);
+        }).catch((error: any) => {
+            console.log('catch ', error);
+        })
+        // return res.send('users get all');
     }
 
     @post('/users')

@@ -1,5 +1,5 @@
 import { Sequelize, Model, DataTypes, BuildOptions, Optional } from 'sequelize';
-import { Database } from './index';
+import { Database } from '../Database';
 
 export interface UserAttributes {
     id: number;
