@@ -62,13 +62,12 @@ class User {
         }).catch((error) => {
             return res.status(500).send(error.message);
         });
-
     }
 
     @get('/users/:id')
     @use(verify.verifyOrdinaryUserJwt)
     getUser(req: Request, res: Response, next: NextFunction) {
-        if (!req.params || !req.params.id || isNaN(Number(req.params.id))) return res.status(500).send('parameter id of type number missing');
+        if (!req.params || !req.params.id || isNaN(Number(req.params.id))) return res.status(400).send('parameter id of type number missing');
 
         UserService.get(Number(req.params.id)).then((users) => {
             return res.send(users);
@@ -79,8 +78,18 @@ class User {
 
     @patch('/users/:id')
     @use(verify.verifyOrdinaryUserJwt)
-    patchUser(req: Request, res: Response, next: NextFunction): Response<any> {
-        return res.send('user update');
+    @bodyValidator({name: [isString], surname: [isString], email: [isEmail]})
+    patchUser(req: Request, res: Response, next: NextFunction) {
+        if (!req.params || !req.params.id || isNaN(Number(req.params.id))) return res.status(400).send('parameter id of type number missing');
+
+        if (!req.body.name && !req.body.surname && !req.body.email) return res.status(400).send('body parameters missing');
+
+        const id = Number(req.params.id);
+        UserService.save({ ...req.body, id}).then((result) => {
+            return res.send(result);
+        }).catch((error) => {
+            return res.status(500).send(error.message);
+        });
     }
 
     @del('/users/:id')
