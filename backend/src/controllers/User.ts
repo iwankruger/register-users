@@ -94,8 +94,13 @@ class User {
 
     @del('/users/:id')
     @use(verify.verifyOrdinaryUserJwt)
-    deleteUser(req: Request, res: Response, next: NextFunction): Response<any> {
-        return res.send('user delete');
+    deleteUser(req: Request, res: Response, next: NextFunction) {
+        if (!req.params || !req.params.id || isNaN(Number(req.params.id))) return res.status(400).send('parameter id of type number missing');
+        UserService.delete(Number(req.params.id)).then((users) => {
+            return res.send(users);
+        }).catch((error) => {
+            return res.status(500).send(error.message);
+        });
     }
 
     @post('/users/login')
