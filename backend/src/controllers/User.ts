@@ -1,7 +1,7 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import { get, post, patch, del, controller, use, bodyValidator, isString, isRequired, isEmail } from './decorators';
 import * as verify from '../verify';
-import { User as UserService } from '../services/user';
+import { User as UserService } from '../services/User';
 
 
 function logger(req: Request, res: Response, next: NextFunction) {
