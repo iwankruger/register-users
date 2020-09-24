@@ -10,7 +10,9 @@ services:
       MYSQL_PASSWORD: password
       # root password
       MYSQL_ROOT_PASSWORD: password
-    container_name: register-users-mysql  
+    container_name: register-users-mysql 
+    # fix "Public Key Retrieval is not allowed" when attempting to connect with DBeaver
+    command: --default-authentication-plugin=mysql_native_password 
   node:
     build:
       context: ./backend
@@ -26,7 +28,7 @@ services:
     ports:
       - "5000:5000"
       - "9229:9229"
-    # depends_on:
-    #  - "mssql"  
+    depends_on:
+      - "mysql"  
     #tty: true  
     command: npm run start:dev

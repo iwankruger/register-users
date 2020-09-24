@@ -34,15 +34,14 @@ function bodyValidators(keys: { [key: string]: ((value: any) => { result: boolea
 export function controller(routePrefix: string): any {
     return (target: () => void) => {
         const router = AppRouter.getInstance();
-        console.log('controller ');
-        for (const key of Object.keys(target.prototype)) {
+        for (const key of Object.getOwnPropertyNames(target.prototype)) {
+            if (key === 'constructor') continue;
             const routeHandler = target.prototype[key];
             const path = Reflect.getMetadata(MetadataKeys.path, target.prototype, key);
             const method: Methods = Reflect.getMetadata(MetadataKeys.method, target.prototype, key);
             const middlewareArray = Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key) || [];
             const requiredBodyProps = Reflect.getMetadata(MetadataKeys.validator, target.prototype, key) || [];
             const validator = bodyValidators(requiredBodyProps);
-
             if (path) router[method](`${routePrefix}${path}`, ...middlewareArray, validator, routeHandler);
         }
     };
