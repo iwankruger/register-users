@@ -1,9 +1,10 @@
 import { FindOptions } from 'sequelize';
-import { 
-    User as UserModel, 
-    UserAttributes, 
+import {
+    User as UserModel,
+    UserAttributes,
     UserCreationAttributes,
-    Phone as PhoneModel
+    Phone as PhoneModel,
+    PhoneCreationAttributes
  } from '../database/models';
 import { Database } from '../database/Database'
 
@@ -66,10 +67,12 @@ class User {
     }
 
     public static async save(user: UserCreationAttributes): Promise<boolean> {
+        let userId: number;
         const t = await Database.getInstance().transaction();
         try {
             // create or update user
             if (user.id) {
+                userId = user.id;
                 // update user
                 const result = await UserModel.update(user, { where: { id: user.id }, transaction: t });
 
@@ -78,10 +81,28 @@ class User {
                     throw new Error('Unsuccessful update');
                 }
 
+                // check if phone numbers should be updated
+                if (Array.isArray(user.phones) && user.phones.length > 0) {
+                    // delete all phone numbers for a specific contact record
+                    await PhoneModel.destroy({ where: { userId: user.id }, transaction: t });
+                }
+
             } else {
                 // create new user
                 const userNew: UserModel = await UserModel.create(user, { transaction: t });
-                console.log('new user ',userNew);
+                userId = userNew.id;
+            }
+
+            // check if phone numbers should be updated or added
+            if (Array.isArray(user.phones) && user.phones.length > 0) {
+                for (let i = 0; i < user.phones.length; i++) {
+                    const phoneObject: PhoneCreationAttributes = {
+                        userId,
+                        number: user.phones[i].number,
+                        phoneTypeId: user.phones[i].phoneTypeId
+                    };
+                    await PhoneModel.create(phoneObject, { transaction: t });
+                }
             }
 
             await t.commit();
