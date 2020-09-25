@@ -117,7 +117,8 @@ class User {
     public static async delete(id: number): Promise<boolean> {
         const t = await Database.getInstance().transaction();
         try {
-            const result = await UserModel.destroy({ where: { id }, transaction: t });
+            let result = await PhoneModel.destroy({ where: { userId: id }, transaction: t });
+            result = result && await UserModel.destroy({ where: { id }, transaction: t });
             // check if the user is deleted
             if (result === 0) return false;
 
