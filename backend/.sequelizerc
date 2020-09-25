@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  'config': './databaseConfig.json',
+  'config': './build/database/databaseConfig.json',
   'models-path': './build/database/models',
   'seeders-path': './build/database/seeders',
   'migrations-path': './build/database/migrations'
