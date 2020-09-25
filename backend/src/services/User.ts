@@ -46,8 +46,6 @@ class User {
             if (limit) replyData = {...replyData, limit };
             if (offset) replyData = {...replyData, offset };
 
-            console.log('count ', totalRecords[0][0].count);
-
             return replyData;
             // const c = await users[0].countPhones();
             // const p = await users[0].getPhones();

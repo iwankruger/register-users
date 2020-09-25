@@ -12,7 +12,9 @@
     "start:dev": "npm-run-all --parallel watch-ts watch-node",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "db:prep": "sequelize db:migrate && sequelize db:seed:all",
-    "test": "jest",
+    "test": "npm-run-all --serial test:prep test:run",
+    "test:prep": "sequelize db:drop --env test; sequelize db:create --env test; sequelize db:migrate --env test && sequelize db:seed:all --env test",
+    "test:run": "NODE_ENV=test; jest",
     "test:coverage": "jest --coverage"
   },
   "keywords": [],
