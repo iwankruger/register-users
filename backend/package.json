@@ -11,7 +11,9 @@
     "watch-ts": "tsc -w",
     "start:dev": "npm-run-all --parallel watch-ts watch-node",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "db:prep": "sequelize db:migrate && sequelize db:seed:all"
+    "db:prep": "sequelize db:migrate && sequelize db:seed:all",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
