@@ -1,5 +1,7 @@
 import { Dispatch } from 'redux';
-import { ActionTypes } from './types'
+import { ApiInstance } from '../services/ApiInstance';
+import { ActionTypes } from './types';
+import config from '../config.json';
 
 const users = [{
     id: 0,
@@ -92,12 +94,17 @@ export const fetchUsers = (limit?: number, offset?: number) => {
     const data = users.slice(offset, end);
 
     console.log({ users: data, totalCount: users.length, limit: limitNew, offset: offsetNew });
-    return (dispatch: Dispatch) => {
-
+    return async (dispatch: Dispatch) => {
+        console.log('AAA ', `${config.server.API}/api/users`);
+        ApiInstance.setToken('hello world!!!');
+        const userData: { data: {users: UsersInterface[]}} = await ApiInstance.getInstance().get(`${config.server.API}/api/users?limit=${limitNew}&offset=${offsetNew}`);
+        // if (authResult.status === 200 && authResult.data && authResult.data.token) {
+        console.log('users ',userData);
         dispatch<FetchUsersInterface>({ 
             type: ActionTypes.usersFetch, 
-            payload: { users: data, totalCount: users.length, limit: limitNew, offset: offsetNew } 
+            payload: { users: userData.data.users, totalCount: users.length, limit: limitNew, offset: offsetNew } 
         });
+    
     };
 };
 
