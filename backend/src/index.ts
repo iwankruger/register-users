@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import passport from 'passport';
+import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import { AppRouter } from './AppRouter';
 import './controllers/User';
@@ -9,6 +10,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(passport.initialize());
+app.use(cors());
 
 
 app.get('/', verify.verifyOrdinaryUserLocal, (eq: Request, res: Response) => {

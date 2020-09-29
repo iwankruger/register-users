@@ -50,7 +50,7 @@ interface RequestWithKey extends Request {
 export const verifyOrdinaryUserJwt = (req: RequestWithKey, res: Response, next: NextFunction) => {
     console.log('debug jwt strategy ');
     // check header or url parameters or post parameters for token
-    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const token = req.body.token || req.query.token || req.headers.token;
 
     if (!token) return res.status(401).send('Unauthorized');
 
