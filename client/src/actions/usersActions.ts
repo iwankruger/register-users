@@ -95,14 +95,12 @@ export const fetchUsers = (limit?: number, offset?: number) => {
 
     console.log({ users: data, totalCount: users.length, limit: limitNew, offset: offsetNew });
     return async (dispatch: Dispatch) => {
-        console.log('AAA ', `${config.server.API}/api/users`);
-        ApiInstance.setToken('hello world!!!');
-        const userData: { data: {users: UsersInterface[]}} = await ApiInstance.getInstance().get(`${config.server.API}/api/users?limit=${limitNew}&offset=${offsetNew}`);
-        // if (authResult.status === 200 && authResult.data && authResult.data.token) {
-        console.log('users ',userData);
+        const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users?limit=${limitNew}&offset=${offsetNew}`);
+        //todo if (authResult.status === 200 && authResult.data && authResult.data.token) {
+       
         dispatch<FetchUsersInterface>({ 
             type: ActionTypes.usersFetch, 
-            payload: { users: userData.data.users, totalCount: users.length, limit: limitNew, offset: offsetNew } 
+            payload: { users: userData.data.users, totalCount: userData.data.totalCount, limit: userData.data.limit, offset: userData.data.offset } 
         });
     
     };
@@ -111,13 +109,14 @@ export const fetchUsers = (limit?: number, offset?: number) => {
 export const fetchUserDetail = (id: number) => {
     console.log('fetch user detail action');
     
-    const data = users[id];
+    //const data = users[id];
     
-    return (dispatch: Dispatch) => {
-
+    return async (dispatch: Dispatch) => {
+        const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users/${id}`);
+        
         dispatch<FetchUserDetailInterface>({ 
             type: ActionTypes.userDetailFetch, 
-            payload: data
+            payload: userData.data.users[0]
         });
     };
 };
