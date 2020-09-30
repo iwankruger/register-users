@@ -20,12 +20,10 @@ The following is need
 ### Getting Started
 
 In the root of the project, run the following docker command.
-The first command will build the dockers.  The second command invokes the Node.js application Docker and MySql docker.
+The first command will build the dockers.  The second command invokes the Node.js application and MySQL docker.
 ```
 > docker-compose build
 > docker-compose up
-> cd client
-> npm start
 ```
 
 Run database migrations
