@@ -1,12 +1,14 @@
 import { DummyDataFetchAction, DummyDataDeleteAction } from './dummy';
-import { FetchUsersInterface, FetchUserDetailInterface } from './usersActions';
+import { FetchUsersInterface, FetchUserDetailInterface, userErrorInterface } from './usersActions';
 
 export enum ActionTypes {
     dummyAction,
     dummyDelete,
     usersFetch,
-    userDetailFetch
+    userDetailFetch,
+    userEditAddError
 }
 
 export type Action = DummyDataFetchAction | DummyDataDeleteAction | 
-    FetchUsersInterface | FetchUserDetailInterface;
+    FetchUsersInterface | FetchUserDetailInterface |
+    userErrorInterface;

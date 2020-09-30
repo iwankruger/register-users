@@ -28,6 +28,11 @@ export interface FetchUserDetailInterface {
     payload: UsersInterface;
 }
 
+export interface userErrorInterface {
+    type: ActionTypes.userEditAddError;
+    payload: string;
+}
+
 export const fetchUsers = (limit?: number, offset?: number) => {
     console.log('fetch users action');
     
@@ -81,32 +86,39 @@ export const addOrUpdateUser = (user: UsersInterface, callback: () => void) => {
     console.log('add or update user action ', user.id);
     
     return async (dispatch: Dispatch) => {
-
-        if (user.id > 0) {
-            // update user
-            const userUpdateResult = await ApiInstance.getInstance().patch<UsersFetchInterface>(`${config.server.API}/api/users/${user.id}`, {
-                name: user.name,
-                surname: user.surname,
-                email: user.email
-            });
-    
-        } else {
-            // add user
-            const userAddResult = await ApiInstance.getInstance().post<UsersFetchInterface>(`${config.server.API}/api/users`, {
-                name: user.name,
-                surname: user.surname,
-                email: user.email
-            });    
-        }
-
-        const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users`);
-        callback();
+        try {
+            if (user.id > 0) {
+                // update user
+                const userUpdateResult = await ApiInstance.getInstance().patch<UsersFetchInterface>(`${config.server.API}/api/users/${user.id}`, {
+                    name: user.name,
+                    surname: user.surname,
+                    email: user.email
+                });
         
+            } else {
+                // add user
+                const userAddResult = await ApiInstance.getInstance().post<UsersFetchInterface>(`${config.server.API}/api/users`, {
+                    name: user.name,
+                    surname: user.surname,
+                    email: user.email
+                });    
+            }
 
-        dispatch<FetchUsersInterface>({ 
-            type: ActionTypes.usersFetch, 
-            payload: { users: userData.data.users, totalCount: userData.data.totalCount, limit: 5, offset: 0 } 
-        });
+            const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users`);
+            callback();
+            
+
+            dispatch<FetchUsersInterface>({ 
+                type: ActionTypes.usersFetch, 
+                payload: { users: userData.data.users, totalCount: userData.data.totalCount, limit: 5, offset: 0 } 
+            });
+        } catch (error) {
+            console.log('EEEE ', error);
+            dispatch<userErrorInterface>({ 
+                type: ActionTypes.userEditAddError, 
+                payload: 'Update failed'
+            });
+        } 
     };
 };
 
@@ -114,17 +126,25 @@ export const deleteUser = (id: number, limit: number, offset: number) => {
     console.log('delete user action');
     
     return async (dispatch: Dispatch) => {
-        await ApiInstance.getInstance().delete<boolean>(`${config.server.API}/api/users/${id}`);
+        try {
+            await ApiInstance.getInstance().delete<boolean>(`${config.server.API}/api/users/${id}`);
 
-        const limitNew = !limit? 5: limit; 
-        const offsetNew = !offset? 0: offset; 
-      
-        const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users?limit=${limitNew}&offset=${offsetNew}`);
+            const limitNew = !limit? 5: limit; 
+            const offsetNew = !offset? 0: offset; 
         
-        dispatch<FetchUsersInterface>({ 
-            type: ActionTypes.usersFetch, 
-            payload: { users: userData.data.users, totalCount: userData.data.totalCount, limit: userData.data.limit, offset: userData.data.offset } 
-        });
+            const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users?limit=${limitNew}&offset=${offsetNew}`);
+      
+            dispatch<FetchUsersInterface>({ 
+                type: ActionTypes.usersFetch, 
+                payload: { users: userData.data.users, totalCount: userData.data.totalCount, limit: userData.data.limit, offset: userData.data.offset } 
+            });
+
+        } catch (error) {
+            dispatch<userErrorInterface>({ 
+                type: ActionTypes.userEditAddError, 
+                payload: 'Delete failed'
+            });
+        } 
         
     
     }

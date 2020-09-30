@@ -45,8 +45,6 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
             
             //this.setState({userId: this.props.match.params.id})
         }
-    
-        console.log("DDDDD ", this.props);
         //this.setState({initialValues: {name: 'hello'}});
     }
 
@@ -88,6 +86,16 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
   
     }
 
+    renderError() {
+        if (this.props.userData.error) {
+            return (
+                <div>
+                    {this.props.userData.error}
+                </div>
+            );
+        }
+    }
+
     render() {
         const { handleSubmit } = this.props;
 
@@ -112,6 +120,8 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
                     name="email"
                     component={this.renderField}
                 />
+                { this.renderError()}
+                
                 <div className="row">
                     <div className="col-md-8"></div>
                     <div className="col-md-2">

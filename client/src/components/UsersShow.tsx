@@ -70,6 +70,16 @@ class UsersShow extends React.Component<AppProps> {
         this.props.fetchUsers(limit, newOffset);
     }
 
+    renderError() {
+        if (this.props.userData.error) {
+            return (
+                <div>
+                    {this.props.userData.error}
+                </div>
+            );
+        }
+    }
+
     render() {
         
         return (
@@ -82,7 +92,7 @@ class UsersShow extends React.Component<AppProps> {
                 <div className="pt-3">
                     <ul className="list-group">{this.renderUsers()}</ul>
                 </div>
-    
+                { this.renderError()}
                 <div className="float-right pt-3">
                     <ReactPaginate
                         previousLabel={"previous"}
