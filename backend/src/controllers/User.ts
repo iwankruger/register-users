@@ -4,26 +4,12 @@ import * as verify from '../verify';
 import { User as UserService } from '../services/User';
 
 
+// todo add logging
 function logger(req: Request, res: Response, next: NextFunction) {
-    console.log('logging hello world!!!');
+    console.log('logging request todo');
     console.log(req.body);
     next();
 }
-
-function validateUserPost(...keys: string[]) {
-    return (req: Request, res: Response, next: NextFunction) => {
-        console.log('Validate body');
-        if (!req.body) {
-            return res.status(422).send('Invalid request');
-        }
-        for (const key of keys) {
-            console.log(key)
-            if (!req.body[key]) return res.status(422).send('Invalid request');
-        }
-        next();
-    }
-}
-
 
 
 @controller('/api')
