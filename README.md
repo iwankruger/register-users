@@ -31,6 +31,11 @@ Run database migrations
 > backend/docker/npm.sh run db:prep
 ```
 
+Run unit tests
+```
+> backend/docker/npm.sh run test
+```
+
 Start client
 ```
 > cd client
