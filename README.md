@@ -15,6 +15,7 @@
 # Prerequisite
 The following is need
 * Docker
+* Node.js
 
 ### Getting Started
 
