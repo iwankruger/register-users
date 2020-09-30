@@ -12,7 +12,7 @@ export interface UserGetInterface {
     users: UserModel[];
     limit?: number;
     offset?: number;
-    totalRecords: number;
+    totalCount: number;
 };
 
 class User {
@@ -32,15 +32,15 @@ class User {
             if (limit && !isNaN(limit)) {limit = Number(limit); query.limit = limit; }
 
             const users = await UserModel.findAll(query);
-            const totalRecords = await Database.getInstance().query(`SELECT COUNT(id) as 'count' FROM Users`);
+            const totalCount = await Database.getInstance().query(`SELECT COUNT(id) as 'count' FROM Users`);
 
-            if (!totalRecords || !Array.isArray(totalRecords) || !Array.isArray(totalRecords[0])) {
+            if (!totalCount || !Array.isArray(totalCount) || !Array.isArray(totalCount[0])) {
                 throw new Error('Total amount of records could not be retrieved from database');
             }
 
             let replyData: UserGetInterface = {
                 users,
-                totalRecords: totalRecords[0][0].count
+                totalCount: totalCount[0][0].count
             };
 
             if (limit) replyData = {...replyData, limit };
@@ -115,8 +115,8 @@ class User {
     public static async delete(id: number): Promise<boolean> {
         const t = await Database.getInstance().transaction();
         try {
-            let result = await PhoneModel.destroy({ where: { userId: id }, transaction: t });
-            result = result && await UserModel.destroy({ where: { id }, transaction: t });
+            await PhoneModel.destroy({ where: { userId: id }, transaction: t });
+            const result = await UserModel.destroy({ where: { id }, transaction: t });
             // check if the user is deleted
             if (result === 0) return false;
 

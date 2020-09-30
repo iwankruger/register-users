@@ -3,62 +3,6 @@ import { ApiInstance } from '../services/ApiInstance';
 import { ActionTypes } from './types';
 import config from '../config.json';
 
-const users = [{
-    id: 0,
-    name: 'Ricky',
-    surname: 'Ponting',
-    email: 'ricky@ponting.com'
-},{
-    id: 1,
-    name: 'AB',
-    surname: 'De Villiers',
-    email: 'ab@devilliers.com'
-},{
-    id: 2,
-    name: 'Jacques',
-    surname: 'Kallis',
-    email: 'jacques@kallis.com'
-},{
-    id: 3,
-    name: 'Sachin',
-    surname: 'Tendulkar',
-    email: 'sachin@tendulkar.com'
-},{
-    id: 4,
-    name: 'Brian',
-    surname: 'Lara',
-    email: 'brian@lara.com'
-},{
-    id: 5,
-    name: 'Virat',
-    surname: 'Kohli',
-    email: 'virat@kohli.com'
-},{
-    id: 6,
-    name: 'Adam',
-    surname: 'Gilchrist',
-    email: 'adam@gilchrist.com'
-},{
-    id: 7,
-    name: 'Shane',
-    surname: 'Warne',
-    email: 'shane@warne.com'
-},{
-    id: 8,
-    name: 'Brett',
-    surname: 'Lee',
-    email: 'brett@lee.com'
-},{
-    id: 9,
-    name: 'Dale',
-    surname: 'Steyn',
-    email: 'dale@steyn.com'
-},{
-    id: 10,
-    name: 'Glenn',
-    surname: 'McGrath',
-    email: 'glenn@mcgrath.com'
-}];
 
 export interface UsersInterface {
     id: number;
@@ -90,14 +34,9 @@ export const fetchUsers = (limit?: number, offset?: number) => {
     const limitNew = !limit? 5: limit; 
     const offsetNew = !offset? 0: offset; 
 
-    const end = offsetNew + limitNew; //users.length;
-    const data = users.slice(offset, end);
-
-    console.log({ users: data, totalCount: users.length, limit: limitNew, offset: offsetNew });
     return async (dispatch: Dispatch) => {
         const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users?limit=${limitNew}&offset=${offsetNew}`);
         //todo if (authResult.status === 200 && authResult.data && authResult.data.token) {
-       
         dispatch<FetchUsersInterface>({ 
             type: ActionTypes.usersFetch, 
             payload: { users: userData.data.users, totalCount: userData.data.totalCount, limit: userData.data.limit, offset: userData.data.offset } 
@@ -108,8 +47,6 @@ export const fetchUsers = (limit?: number, offset?: number) => {
 
 export const fetchUserDetail = (id: number) => {
     console.log('fetch user detail action');
-    
-    //const data = users[id];
     
     return async (dispatch: Dispatch) => {
         const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users/${id}`);
@@ -141,34 +78,34 @@ export const fetchUserDetailBlank = () => {
 };
 
 export const addOrUpdateUser = (user: UsersInterface, callback: () => void) => {
-    console.log('add or update user action');
+    console.log('add or update user action ', user.id);
     
-    let userUpdated = false;
-    for(let i = 0; i < users.length; i++) {
-        if (users[i].id === user.id) {
-            console.log('found user');
-            userUpdated = true;
-            users[i] = user; 
+    return async (dispatch: Dispatch) => {
+
+        if (user.id > 0) {
+            // update user
+            const userUpdateResult = await ApiInstance.getInstance().patch<UsersFetchInterface>(`${config.server.API}/api/users/${user.id}`, {
+                name: user.name,
+                surname: user.surname,
+                email: user.email
+            });
+    
+        } else {
+            // add user
+            const userAddResult = await ApiInstance.getInstance().post<UsersFetchInterface>(`${config.server.API}/api/users`, {
+                name: user.name,
+                surname: user.surname,
+                email: user.email
+            });    
         }
-    }
-    
-    const nextId = users.length;
 
-    // if user could not be found add user
-    if (!userUpdated) users.push({...user, id: nextId});
-    
-    const data = users;
-
-    console.log(users);
-    
-
-    callback();
-
-    return (dispatch: Dispatch) => {
+        const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users`);
+        callback();
+        
 
         dispatch<FetchUsersInterface>({ 
             type: ActionTypes.usersFetch, 
-            payload: { users: data, totalCount: users.length, limit: 5, offset: 0 } 
+            payload: { users: userData.data.users, totalCount: userData.data.totalCount, limit: 5, offset: 0 } 
         });
     };
 };
@@ -176,14 +113,19 @@ export const addOrUpdateUser = (user: UsersInterface, callback: () => void) => {
 export const deleteUser = (id: number, limit: number, offset: number) => {
     console.log('delete user action');
     
-    for(let i = 0; i < users.length; i++) {
-        if (users[i].id === id) {
-            console.log('found user');
-            users.splice(i, 1);
-        }
+    return async (dispatch: Dispatch) => {
+        await ApiInstance.getInstance().delete<boolean>(`${config.server.API}/api/users/${id}`);
+
+        const limitNew = !limit? 5: limit; 
+        const offsetNew = !offset? 0: offset; 
+      
+        const userData = await ApiInstance.getInstance().get<UsersFetchInterface>(`${config.server.API}/api/users?limit=${limitNew}&offset=${offsetNew}`);
+        
+        dispatch<FetchUsersInterface>({ 
+            type: ActionTypes.usersFetch, 
+            payload: { users: userData.data.users, totalCount: userData.data.totalCount, limit: userData.data.limit, offset: userData.data.offset } 
+        });
+        
+    
     }
-
-    console.log(users);
-
-    return fetchUsers(limit, offset);
 };
