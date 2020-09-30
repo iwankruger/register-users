@@ -73,7 +73,7 @@ class UsersShow extends React.Component<AppProps> {
     renderError() {
         if (this.props.userData.error) {
             return (
-                <div>
+                <div className="alert alert-danger" role="alert">
                     {this.props.userData.error}
                 </div>
             );

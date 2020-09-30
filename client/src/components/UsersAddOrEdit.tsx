@@ -56,6 +56,7 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
             meta: { touched, error },
         } = field;
         const className = `form-group ${touched && error ? "has-danger" : ""}`;
+        const classNameInput = `form-control ${touched && error ? "is-invalid" : ""}`;
 
         // field is an event handler
         // ...field.input JSX for
@@ -65,8 +66,8 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
         return (
             <div className={className}>
                 <label>{field.label}</label>
-                <input className="form-control" type="text" {...field.input} />
-                <div className="text-help">{touched ? error : ""}</div>
+                <input className={classNameInput} type="text" {...field.input} />
+                <div className="invalid-feedback">{touched ? error : ""}</div>
             </div>
         );
     }
@@ -89,7 +90,7 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
     renderError() {
         if (this.props.userData.error) {
             return (
-                <div>
+                <div className="alert alert-danger" role="alert">
                     {this.props.userData.error}
                 </div>
             );
@@ -121,7 +122,7 @@ class UsersAddOrEdit extends React.Component<InjectedFormProps & AppProps> {
                     component={this.renderField}
                 />
                 { this.renderError()}
-                
+
                 <div className="row">
                     <div className="col-md-8"></div>
                     <div className="col-md-2">
